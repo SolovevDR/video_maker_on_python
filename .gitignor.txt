@@ -1,0 +1,4 @@
+D:\video\img.jpg
+D:\video\music.mp3
+D:\video\video.mp4
+D:\video\video_vert.mp4
