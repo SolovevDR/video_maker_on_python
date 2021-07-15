@@ -43,6 +43,7 @@ def make_image_video(name_image):
     mean_height += height  # высоты и ширины
 
     frame = cv2.imread(name_image)
+
     height, width, layers = frame.shape
     video = cv2.VideoWriter('image_video.avi', 0, 1, (width, height))
     video.write(cv2.imread(name_image))
@@ -121,7 +122,11 @@ def editing_part_audio_in_video(name_video, start_time, end_time, koef):
     print('все видео длительность: ', trim_vid.duration)
     trim_vid.write_videofile('video_res.mp4', codec='libx264')
 
-#конвертирование видео в чб !!!!!!!!!!!!!
+#конвертирование видео в чб(работает правильно)
+def make_video_white_black(name_video):
+    vid = VideoFileClip(name_video)
+    trim_vid = vid.fx(vfx.blackwhite)
+    trim_vid.write_videofile('video_res.mp4', codec='libx264')
 
 #обрезает аудио файл(работает правильно)
 def cut_audio(name_music, start_time,end_time):
@@ -134,7 +139,22 @@ def extract_audio_from_video(name_video):
     audioclip = AudioFileClip(name_video)
     audioclip.write_audiofile("out_audio.mp3")
 
-#добавление текста  !!!!!!!!!!!!
+#добавление текста(пишу)
+def add_text(name_video, text_for_video,text_start_time, text_end_time, size, color):
+    #параметры для указания позиции расположения текста
+    #(пока так будет работать, возможно сделаю формулу для расчета позиции на видео)
+    # right, center, left
+    # top, center, bottom
+    vid = VideoFileClip(name_video)
+    text1 = TextClip(text_for_video,  fontsize=size, font='Courier', color=color)
+    txt_clip = text1.set_pos(("right", "top"), relative=True).set_duration(text_end_time-text_start_time)
+    text2 = TextClip(text_for_video, fontsize=size, font='TimesNewRoman', color=color)
+    txt_clip_2 = text2.set_pos(("right", "top"), relative=True).set_duration(5)
+    video = CompositeVideoClip([vid, txt_clip.set_start(text_start_time), txt_clip_2.set_start(10)])
+    video.write_videofile('video_res.mp4', codec='libx264')
+
+
+
 
 
 
@@ -146,6 +166,8 @@ print('Введите время в секндах')
 #start_time = float(input('Старт'))
 #end_time = float(input('Конец'))
 
+add_text('video.mp4', 'test video', 0, 10 ,100, 'white')
+#make_video_white_black('video.mp4')
 #extract_audio_from_video('video.mp4')
 #cut_audio('music.mp3', 25, 47)
 #editing_part_audio_in_video('video.mp4', 3, 15, 0)
