@@ -480,7 +480,7 @@ def update_number_of_usages(id):
         try:
 
             with connection.cursor() as cursor:
-                count = select_number_of_trail_time_usages(id)
+                count = select_number_of_usages(id)
                 count[0] = count[0] + 1
                 values = (count[0], id)
                 update_query = "UPDATE `main_info_about_users` SET number_of_usages = %s WHERE id = %s;"
@@ -494,6 +494,48 @@ def update_number_of_usages(id):
         print("Connection refused...")
         print(ex)
 
-registration_user(0, 'Danaila', 'Solovyev')
+#УДАЛЕНИЕ ТАБЛИЦЫ!!!!!!!!!
+def delete_table():
+    try:
+        connection = pymysql.connect(
+            host="localhost",
+            port=3306,
+            user="root",
+            password="soldan1512",
+            database="base_for_video_maker",
+            cursorclass=pymysql.cursors.DictCursor
+        )
+        print("successfully connected...")
+        print("#" * 20)
 
+        try:
+            cursor = connection.cursor()
+            drop_table_query = "DROP TABLE `main_info_about_users`;"
+            cursor.execute(drop_table_query)
+            print("Table deleted successfully")
+
+
+
+        finally:
+            connection.close()
+
+    except Exception as ex:
+        print("Connection refused...")
+        print(ex)
+
+#print(select_last_use(0))
+#print(select_number_of_trail_time_usages(0))
+#print(select_name(0))
+#print(select_last_use(0))
+#print(select_id())
+#print(select_buying_time(0))
+#print(select_number_of_usages(0))
+#print(select_users_status(0))
+#print(select_lastname(0))
+#update_number_of_trail_time_usages(0)
+#update_number_of_usages(0)
+#print(select_number_of_trail_time_usages(0))
+#print(select_number_of_usages(0))
+#registration_user(0, 'Danaila', 'Solovyev')
 #connect()
+#delete_table()
