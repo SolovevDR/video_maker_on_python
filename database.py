@@ -57,8 +57,8 @@ def registration_user(id, name, lastname):
                 #users_status = 0 - пользователь с бесплатной версией
                 #users_status = 1 - пользователь с пробной версией
                 #users_status = 2 - пользователь с платной версией
-                insert_query = "INSERT INTO registration_table (id, name, lastname, users_status, buying_time, " \
-                               "number_of_trail_time_usages, last_use, number_of_usages VALUES (%s, %s, %s, %s, %s, %s, %s, %s);"
+                insert_query = "INSERT INTO main_info_about_users (id, name, lastname, users_status, buying_time, " \
+                               "number_of_trail_time_usages, last_use, number_of_usages) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);"
                 cursor.execute(insert_query, values)
                 connection.commit()
 
@@ -347,7 +347,153 @@ def select_number_of_usages(id):
         print("Connection refused...")
         print(ex)
 
+#обновление статутса пользователя
+def update_users_status(id, users_status):
+    try:
+        connection = pymysql.connect(
+            host="localhost",
+            port=3306,
+            user="root",
+            password="soldan1512",
+            database="base_for_video_maker",
+            cursorclass=pymysql.cursors.DictCursor
+        )
+
+        try:
+            values = (users_status, id)
+            with connection.cursor() as cursor:
+                update_query = "UPDATE `main_info_about_users` SET users_status = %s WHERE id = %s;"
+                cursor.execute(update_query, values)
+                connection.commit()
 
 
 
-connect()
+        finally:
+            connection.close()
+
+    except Exception as ex:
+        print("Connection refused...")
+        print(ex)
+
+#запись времени покупки платной версии(когда она будет)
+def update_buying_time(id, buying_time):
+    try:
+        connection = pymysql.connect(
+            host="localhost",
+            port=3306,
+            user="root",
+            password="soldan1512",
+            database="base_for_video_maker",
+            cursorclass=pymysql.cursors.DictCursor
+        )
+
+        try:
+            values = (buying_time, id)
+            with connection.cursor() as cursor:
+                update_query = "UPDATE `main_info_about_users` SET buying_time = %s WHERE id = %s;"
+                cursor.execute(update_query, values)
+                connection.commit()
+
+
+
+        finally:
+            connection.close()
+
+    except Exception as ex:
+        print("Connection refused...")
+        print(ex)
+
+#колличество оставшихся бесплатных использований
+def update_number_of_trail_time_usages(id):
+    try:
+        connection = pymysql.connect(
+            host="localhost",
+            port=3306,
+            user="root",
+            password="soldan1512",
+            database="base_for_video_maker",
+            cursorclass=pymysql.cursors.DictCursor
+        )
+
+        try:
+
+            with connection.cursor() as cursor:
+                count = select_number_of_trail_time_usages(id)
+                if count[0] > 0:
+                    count[0] = count[0] - 1
+                else:
+                    count[0] = 0
+                values = (count[0], id)
+                update_query = "UPDATE `main_info_about_users` SET number_of_trail_time_usages = %s WHERE id = %s;"
+                cursor.execute(update_query, values)
+                connection.commit()
+
+
+
+        finally:
+            connection.close()
+
+    except Exception as ex:
+        print("Connection refused...")
+        print(ex)
+
+#запись даты последнего использования
+def update_last_use(id, last_use):
+    try:
+        connection = pymysql.connect(
+            host="localhost",
+            port=3306,
+            user="root",
+            password="soldan1512",
+            database="base_for_video_maker",
+            cursorclass=pymysql.cursors.DictCursor
+        )
+
+        try:
+            values = (last_use, id)
+            with connection.cursor() as cursor:
+                update_query = "UPDATE `main_info_about_users` SET last_use = %s WHERE id = %s;"
+                cursor.execute(update_query, values)
+                connection.commit()
+
+
+
+        finally:
+            connection.close()
+
+    except Exception as ex:
+        print("Connection refused...")
+        print(ex)
+
+#колличество использований функциями программы
+def update_number_of_usages(id):
+    try:
+        connection = pymysql.connect(
+            host="localhost",
+            port=3306,
+            user="root",
+            password="soldan1512",
+            database="base_for_video_maker",
+            cursorclass=pymysql.cursors.DictCursor
+        )
+
+        try:
+
+            with connection.cursor() as cursor:
+                count = select_number_of_trail_time_usages(id)
+                count[0] = count[0] + 1
+                values = (count[0], id)
+                update_query = "UPDATE `main_info_about_users` SET number_of_usages = %s WHERE id = %s;"
+                cursor.execute(update_query, values)
+                connection.commit()
+
+        finally:
+            connection.close()
+
+    except Exception as ex:
+        print("Connection refused...")
+        print(ex)
+
+registration_user(0, 'Danaila', 'Solovyev')
+
+#connect()
