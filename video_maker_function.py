@@ -166,7 +166,7 @@ print('Введите время в секндах')
 #start_time = float(input('Старт'))
 #end_time = float(input('Конец'))
 
-add_text('video.mp4', 'test video', 0, 10 ,100, 'white')
+#add_text('video.mp4', 'test video', 0, 10 ,100, 'white')
 #make_video_white_black('video.mp4')
 #extract_audio_from_video('video.mp4')
 #cut_audio('music.mp3', 25, 47)
