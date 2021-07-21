@@ -1,5 +1,7 @@
 import telebot
 from telebot import types
+import os
+import derect_function
 
 bot = telebot.TeleBot('1555796929:AAHtJl5ELHE9jT6OUTXSUSEjRLKe1WIzmSk')
 
@@ -58,10 +60,15 @@ def handle_docs_photo(message):
 
         file_info = bot.get_file(message.video.file_id)
         downloaded_file = bot.download_file(file_info.file_path)
+        print(os.getcwd())
 
-        src = 'D:/video/vid/' + message.video.file_name;
+
+        src = '/home/danila/video/video_maker_on_python/vid/'+ message.video.file_name;
         with open(src, 'wb') as new_file:
             new_file.write(downloaded_file)
+            print(message.video.file_name)
+            derect_function.rename_file('/home/danila/video/video_maker_on_python/vid/', message.video.file_name, 'video_1')
+
 
         bot.reply_to(message, "Пожалуй, я сохраню это")
     except Exception as e:
