@@ -42,6 +42,7 @@ def action_0(message):
             markup1.add(item1)
 
             bot.send_message(message.chat.id, "начинаем ебаться с телегой", reply_markup=markup1)
+            derect_function.creat_dir(message.chat.id)
 
             #bot.register_next_step_handler(message, actiom_1)
         else:
@@ -62,12 +63,13 @@ def handle_docs_photo(message):
         downloaded_file = bot.download_file(file_info.file_path)
         print(os.getcwd())
 
-
-        src = '/home/danila/video/video_maker_on_python/vid/'+ message.video.file_name;
+        start_dir = os.getcwd()
+        src = os.getcwd() + '/vid/user_'+ str(message.chat.id) + '/' + message.video.file_name;
         with open(src, 'wb') as new_file:
             new_file.write(downloaded_file)
-            print(message.video.file_name)
-            derect_function.rename_file('/home/danila/video/video_maker_on_python/vid/', message.video.file_name, 'video_1')
+            #os.chdir('/home/danila/video/video_maker_on_python/vid/user_' + str(message.chat.id) + '/') не убирать на случай если что-то в функции опять сломается
+            print(os.getcwd())
+            derect_function.rename_file(message.chat.id, message.video.file_name, start_dir)
 
 
         bot.reply_to(message, "Пожалуй, я сохраню это")

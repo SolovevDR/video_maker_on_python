@@ -1,6 +1,10 @@
 import os
+import sys
 import cv2
 from PIL import Image
+import threading
+import time
+
 '''
 # Проверка текущего пути к каталогу
 
@@ -91,7 +95,7 @@ def generate_video():
 # Вызов функции generate_video
 generate_video()'''
 
-
+'''
 video1 = cv2.VideoCapture('video.mp4')
 video1_width = video1.get(cv2.CAP_PROP_FRAME_WIDTH)
 print(video1_width)
@@ -113,4 +117,16 @@ while True:
 
 video1.release()
 video2.release()
-writer.release()
+writer.release()'''
+
+'''
+def test_function():
+    print('поток засыпает')
+    print("Запущено потоков: %i." % threading.active_count())
+    time.sleep(10)
+    print('поток проснулся и завершил работу')
+
+
+threading.Thread(target=test_function(), daemon=True).start()
+#sys.exit(test_function)
+print("Запущено потоков: %i." % threading.active_count())'''
