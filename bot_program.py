@@ -11,10 +11,19 @@ def start(message):
 
     # keyboard
     markup1 = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    item1 = types.KeyboardButton("Начать")
-    markup1.add(item1)
+    item1 = types.KeyboardButton("Видео")
+    item2 = types.KeyboardButton("Аудио")
+    markup1.add(item1, item2)
 
-    bot.send_message(message.chat.id, "Это очередная хуйня, которая наверняка будет опять не закончена", reply_markup=markup1)
+    bot.send_message(message.chat.id, "Привет. Это бот созданный для создания простых манипуляций с видео. \n"
+                                      "Весь доступный функционал вы можете посмотреть на вкладках клавиатуры. \n"
+                                      "Во избежание неполадок в результате взаимодействий с ботом, мы рекомендуем пользоваться только клавиатурой бота.")
+    bot.send_message(message.chat.id, "Все ваши файлы будут удалены спустя 3 часа, отсчитывая с последнего вашего действия.\n"
+                                      "Мы также рекомендуем удалить все файлы, с которыми вы работали после завершения вашего сеанся,"
+                                      " для этого также будет кнопка на клавиатуре", reply_markup=markup1)
+    bot.send_message(message.chat.id, "Можете загружать ваши файлы. Видео и другие файлы должны быть загружены "
+                                      "в том порядке, в котором вы будете с ними работать", reply_markup=markup1)
+
     database.registration_user(message.from_user.id, message.from_user.first_name, message.from_user.last_name)
     derect_function.creat_vid_dir(message.from_user.id)
     derect_function.creat_aud_dir(message.from_user.id)
@@ -38,26 +47,102 @@ def menu(message):
 
 
 @bot.message_handler(content_types=['text'])
-def action_0(message):
+def main_menu(message):
     if message.chat.type == 'private':
-        if message.text == 'Начать': #and prov.back() == "0":
 
-            markup1 = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        video_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        item1 = types.KeyboardButton("Обрезать видео")
+        item2 = types.KeyboardButton("Склеить видео")
+        item3 = types.KeyboardButton("Добавить изображение")
+        item4 = types.KeyboardButton("Конвертировать видео в чб")
+        item5 = types.KeyboardButton("Извлечение аудио из видео")
+        item6 = types.KeyboardButton("Назад")
+        video_keyboard.add(item1).add(item2).add(item3).add(item4).add(item5).add(item6)
 
-            item1 = types.KeyboardButton("ну вроду работает")
-            markup1.add(item1)
+        audio_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        item1 = types.KeyboardButton("Наложение аудио поверх исходной дорожки")
+        item2 = types.KeyboardButton("Наложение аудио убрав исходную дорожку")
+        item3 = types.KeyboardButton("Редактирование громкости видео")
+        item4 = types.KeyboardButton("Редактирование громкости аудио")
+        item5 = types.KeyboardButton("Редактирование громкости видео на интервале")
+        item6 = types.KeyboardButton("Обрезание аудио файла")
+        item7 = types.KeyboardButton("Назад")
+        audio_keyboard.add(item1).add(item2).add(item3).add(item4).add(item5).add(item6).add(item7)
 
-            bot.send_message(message.chat.id, "начинаем ебаться с телегой", reply_markup=markup1)
-            #derect_function.creat_dir(message.chat.id)
+        markup1 = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        item1 = types.KeyboardButton("Видео")
+        item2 = types.KeyboardButton("Аудио")
+        markup1.add(item1, item2)
 
-            #bot.register_next_step_handler(message, actiom_1)
+        if message.text == 'Видео': #and prov.back() == "0":
+            bot.send_message(message.chat.id, "тут инструкция по работе с данными инструментами", reply_markup=video_keyboard)
+            bot.register_next_step_handler(message, video_menu)
+        elif message.text == 'Аудио':
+            bot.send_message(message.chat.id, "тут инструкция по работе с данными инструментами", reply_markup=audio_keyboard)
+            bot.register_next_step_handler(message, audio_menu)
         else:
+            bot.send_message(message.chat.id, 'Ты ввел что-то не правильно',reply_markup=markup1)
+            bot.register_next_step_handler(message, main_menu)
 
-            markup1 = types.ReplyKeyboardMarkup(resize_keyboard=True)
-            item1 = types.KeyboardButton("ты даже тут облажался")
-            markup1.add(item1)
 
-            bot.send_message(message.chat.id, 'Ты ввел какую то хуйню',reply_markup=markup1)
+@bot.message_handler(content_types=['text'])
+def video_menu(message):
+    if message.chat.type == 'private':
+
+        markup1 = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        item1 = types.KeyboardButton("Видео")
+        item2 = types.KeyboardButton("Аудио")
+        markup1.add(item1, item2)
+
+        if message.text == 'Обрезать видео': #and prov.back() == "0":
+            bot.send_message(message.chat.id, "тут инструкция по работе с данными инструментами")
+            #bot.register_next_step_handler(message, video_menu)
+        elif message.text == 'Склеить видео':
+            bot.send_message(message.chat.id, "тут инструкция по работе с данными инструментами")
+            #bot.register_next_step_handler(message, audio_menu)
+        elif message.text == 'Добавить изображение':
+            bot.send_message(message.chat.id, "тут инструкция по работе с данными инструментами")
+            #bot.register_next_step_handler(message, audio_menu)
+        elif message.text == 'Конвертировать видео в чб':
+            bot.send_message(message.chat.id, "тут инструкция по работе с данными инструментами")
+        elif message.text == 'Назад':
+            bot.send_message(message.chat.id, "Назад", reply_markup=markup1)
+            bot.register_next_step_handler(message, main_menu)
+        else:
+            bot.send_message(message.chat.id, 'Ты ввел что-то не правильно')
+            bot.register_next_step_handler(message, video_menu)
+
+
+@bot.message_handler(content_types=['text'])
+def audio_menu(message):
+    if message.chat.type == 'private':
+
+        markup1 = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        item1 = types.KeyboardButton("Видео")
+        item2 = types.KeyboardButton("Аудио")
+        markup1.add(item1, item2)
+
+        if message.text == 'Наложение аудио поверх исходной дорожки':  # and prov.back() == "0":
+            bot.send_message(message.chat.id, "тут инструкция по работе с данными инструментами")
+            # bot.register_next_step_handler(message, video_menu)
+        elif message.text == 'Наложение аудио убрав исходную дорожку':
+            bot.send_message(message.chat.id, "тут инструкция по работе с данными инструментами")
+            # bot.register_next_step_handler(message, audio_menu)
+        elif message.text == 'Редактирование громкости видео':
+            bot.send_message(message.chat.id, "тут инструкция по работе с данными инструментами")
+            # bot.register_next_step_handler(message, audio_menu)
+        elif message.text == 'Редактирование громкости аудио':
+            bot.send_message(message.chat.id, "тут инструкция по работе с данными инструментами")
+        elif message.text == 'Редактирование громкости видео на интервале':
+            bot.send_message(message.chat.id, "тут инструкция по работе с данными инструментами")
+        elif message.text == 'Обрезание аудио файла':
+            bot.send_message(message.chat.id, "тут инструкция по работе с данными инструментами")
+        elif message.text == 'Назад':
+            bot.send_message(message.chat.id, "Назад", reply_markup=markup1)
+            bot.register_next_step_handler(message, main_menu)
+        else:
+            bot.send_message(message.chat.id, 'Ты ввел что-то не правильно')
+            bot.register_next_step_handler(message, audio_menu)
 
 
 @bot.message_handler(content_types=['video'])
