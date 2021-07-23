@@ -6,8 +6,8 @@ def connect():
         connection = pymysql.connect(
             host="localhost",
             port=3306,
-            user="root",
-            password="soldan1512",
+            user="danila",
+            password="15122000",
             database="base_for_video_maker",
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -42,8 +42,8 @@ def registration_user(id, name, lastname):
         connection = pymysql.connect(
             host="localhost",
             port=3306,
-            user="root",
-            password="soldan1512",
+            user="danila",
+            password="15122000",
             database="base_for_video_maker",
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -75,8 +75,8 @@ def select_id():
         connection = pymysql.connect(
             host="localhost",
             port=3306,
-            user="root",
-            password="soldan1512",
+            user="danila",
+            password="15122000",
             database="base_for_video_maker",
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -109,8 +109,8 @@ def select_name(id):
         connection = pymysql.connect(
             host="localhost",
             port=3306,
-            user="root",
-            password="soldan1512",
+            user="danila",
+            password="15122000",
             database="base_for_video_maker",
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -144,8 +144,8 @@ def select_lastname(id):
         connection = pymysql.connect(
             host="localhost",
             port=3306,
-            user="root",
-            password="soldan1512",
+            user="danila",
+            password="15122000",
             database="base_for_video_maker",
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -179,8 +179,8 @@ def select_users_status(id):
         connection = pymysql.connect(
             host="localhost",
             port=3306,
-            user="root",
-            password="soldan1512",
+            user="danila",
+            password="15122000",
             database="base_for_video_maker",
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -214,8 +214,8 @@ def select_buying_time(id):
         connection = pymysql.connect(
             host="localhost",
             port=3306,
-            user="root",
-            password="soldan1512",
+            user="danila",
+            password="15122000",
             database="base_for_video_maker",
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -249,8 +249,8 @@ def select_number_of_trail_time_usages(id):
         connection = pymysql.connect(
             host="localhost",
             port=3306,
-            user="root",
-            password="soldan1512",
+            user="danila",
+            password="15122000",
             database="base_for_video_maker",
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -284,8 +284,8 @@ def select_last_use(id):
         connection = pymysql.connect(
             host="localhost",
             port=3306,
-            user="root",
-            password="soldan1512",
+            user="danila",
+            password="15122000",
             database="base_for_video_maker",
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -319,8 +319,8 @@ def select_number_of_usages(id):
         connection = pymysql.connect(
             host="localhost",
             port=3306,
-            user="root",
-            password="soldan1512",
+            user="danila",
+            password="15122000",
             database="base_for_video_maker",
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -353,8 +353,8 @@ def update_users_status(id, users_status):
         connection = pymysql.connect(
             host="localhost",
             port=3306,
-            user="root",
-            password="soldan1512",
+            user="danila",
+            password="15122000",
             database="base_for_video_maker",
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -381,8 +381,8 @@ def update_buying_time(id, buying_time):
         connection = pymysql.connect(
             host="localhost",
             port=3306,
-            user="root",
-            password="soldan1512",
+            user="danila",
+            password="15122000",
             database="base_for_video_maker",
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -409,8 +409,8 @@ def update_number_of_trail_time_usages(id):
         connection = pymysql.connect(
             host="localhost",
             port=3306,
-            user="root",
-            password="soldan1512",
+            user="danila",
+            password="15122000",
             database="base_for_video_maker",
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -443,8 +443,8 @@ def update_last_use(id, last_use):
         connection = pymysql.connect(
             host="localhost",
             port=3306,
-            user="root",
-            password="soldan1512",
+            user="danila",
+            password="15122000",
             database="base_for_video_maker",
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -471,8 +471,8 @@ def update_number_of_usages(id):
         connection = pymysql.connect(
             host="localhost",
             port=3306,
-            user="root",
-            password="soldan1512",
+            user="danila",
+            password="15122000",
             database="base_for_video_maker",
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -500,8 +500,8 @@ def delete_table():
         connection = pymysql.connect(
             host="localhost",
             port=3306,
-            user="root",
-            password="soldan1512",
+            user="danila",
+            password="15122000",
             database="base_for_video_maker",
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -536,6 +536,6 @@ def delete_table():
 #update_number_of_usages(0)
 #print(select_number_of_trail_time_usages(0))
 #print(select_number_of_usages(0))
-#registration_user(0, 'Danaila', 'Solovyev')
+registration_user(0, 'Danaila', 'Solovyev')
 #connect()
 #delete_table()
