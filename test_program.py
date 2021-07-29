@@ -1,132 +1,265 @@
 import os
-import sys
 import cv2
 from PIL import Image
-import threading
-import time
+import video_maker_function
+import derect_function
 
-'''
-# Проверка текущего пути к каталогу
-
-print(os.getcwd())
-
-# Папка, которая содержит все изображения
-# из которого должно быть сгенерировано видео
-
-os.chdir("D:\\video\\image")
-path = "D:\\video\\image"
-mean_height = 0
-mean_width = 0
-num_of_images = len(os.listdir('.'))
-
-#print (num_of_images)
-
-for file in os.listdir('.'):
-    im = Image.open(os.path.join(path, file))
-    width, height = im.size
-    mean_width += width
-    mean_height += height
-
-    # im.show () # раскомментируйте это для отображения изображения
-
-# Нахождение средней высоты и ширины всех изображений.
-# Это необходимо, потому что требуется видеокадр
-# устанавливается одинаковой шириной и высотой. В противном случае
-# изображения не равные этой ширине высота не получится
-# встроено в видео
-
-mean_width = int(mean_width / num_of_images)
-mean_height = int(mean_height / num_of_images)
-
-# print (mean_height)
-# print (mean_width)
+def tranclate_time(time):
+    numbers = '0123456789'
+    flag = False
+    min = ''
+    sec = ''
+    for j in range(len(time)):
+        if (flag == False) and (time[j] in numbers):
+            min = min + time[j]
+        elif (flag == True) and (time[j] in numbers):
+            sec = sec + time[j]
+        else:
+            flag = True
+    try:
+        if sec == '':
+            sec = 0
+        times = int(min) * 60 + int(sec)
+        print(times)
+    except:
+        times = False
+    return times
 
 
-# Изменение размера изображений, чтобы дать
-# их одинаковой ширины и высоты
 
-for file in os.listdir('.'):
+user_id = '932229437'
+file1 = open("user_932229437.txt", "r")
+spic = []
 
-    if file.endswith(".jpg") or file.endswith(".jpeg") or file.endswith("png"):
-        # открытие изображения с помощью PIL Image
-        im = Image.open(os.path.join(path, file))
-        # im.size включает в себя высоту и ширину изображения
-        width, height = im.size
-        print(width, height)
-        # изменение размера
-        imResize = im.resize((mean_width, mean_height), Image.ANTIALIAS)
-        imResize.save(file, 'JPEG', quality=95)  # настройка качества
-        # печать каждого измененного имени изображения
-        print(im.filename.split('//')[-1], " is resized")
-
-    # Функция создания видео
-
-
-def generate_video():
-    image_folder = '.'  # убедитесь, что используете вашу папку
-    video_name = 'mygeneratedvideo.avi'
-    os.chdir("D:\\video\\image")
-    images = [img for img in os.listdir(image_folder)
-              if img.endswith(".jpg") or
-              img.endswith(".jpeg") or
-              img.endswith("png")]
-
-    # Изображения массива должны учитывать только
-    # файлы изображений, игнорируя другие, если таковые имеются
-
-    print(images)
-    frame = cv2.imread(os.path.join(image_folder, images[0]))
-    # настройка ширины рамки, высоты по ширине
-    # ширина, высота первого изображения
-
-    height, width, layers = frame.shape
-    video = cv2.VideoWriter(video_name, 0, 1, (width, height))
-
-    # Добавление изображений к видео по одному
-
-    for image in images:
-        video.write(cv2.imread(os.path.join(image_folder, image)))
-
-        # Распределение памяти, взятой для создания окна
-
-    cv2.destroyAllWindows()
-    video.release()  # выпуск сгенерированного видео
-
-# Вызов функции generate_video
-generate_video()'''
-
-'''
-video1 = cv2.VideoCapture('video.mp4')
-video1_width = video1.get(cv2.CAP_PROP_FRAME_WIDTH)
-print(video1_width)
-video1_height = int(video1.get(cv2.CAP_PROP_FRAME_HEIGHT))
-video1_fps = int(video1.get(cv2.CAP_PROP_FPS))
-
-video2 = cv2.VideoCapture('image_video.avi')
-
-writer = cv2.VideoWriter('video3.mp4', cv2.VideoWriter_fourcc(*'mp4v'),
-                         video1_fps, (int(video1_width), int(video1_height)))
-writer.set(cv2.VIDEOWRITER_PROP_QUALITY, 100)
-
+#засунуть в оболочку функции
 while True:
-    ret, frame = video2.read()
-    if not ret:
+    # считываем строку
+    line = file1.readline()
+    time_line = line.split()
+    if len(time_line) != 0:
+        spic.append(time_line)
+    # прерываем цикл, если строка пустая
+    if not line:
         break
-    frame = cv2.resize(frame, (int(video1_width), int(video1_height)))
-    writer.write(frame)
+    # выводим строку
+    #print(line.strip())
 
-video1.release()
-video2.release()
-writer.release()'''
+# закрываем файл
+file1.close
+lene = 0
+
+
+
+
+
+#tranclate_time('fff2:ff09fff')
+
+def do_command_list(user_id):
+    flag = None
+    names = []
+    numbers = '0123456789'
+    for i in range(len(spic)):
+        if spic[i][0] == '0':  # работает надеюсь больше делать ничего не буду тут
+            print(spic[i][0])
+            start = tranclate_time(spic[i][2])
+            end = tranclate_time(spic[i][3])
+            video_name = 'video_' + str(spic[i][1]) + '.'
+            start_dir = os.getcwd()
+            dir_files = derect_function.checking_for_video(user_id, start_dir)
+            for i in dir_files:
+                if video_name in i:
+                    video_name = i
+                    break
+            video_maker_function.cut_video(video_name, start, end, user_id)
+        elif spic[i][0] == '1':
+            start_dir = os.getcwd()
+            dir_files = derect_function.checking_for_video(user_id, start_dir)
+            for j in range(len(spic[i])):
+                if j == 0:
+                    pass
+                else:
+                    video_name = 'video_' + str(spic[i][j]) + '.'
+                    for k in dir_files:  #
+                        if video_name in k:
+                            video_name = k
+                            names.append(video_name)
+                            break
+            flag = True
+            os.chdir(start_dir)
+        elif spic[i][0] == '2':
+            video_name = 'video_' + str(spic[i][3]) + '.'
+            start_dir = os.getcwd()
+            dir_files = derect_function.checking_for_video(user_id, start_dir)
+            for j in dir_files:
+                if video_name in j:
+                    video_name = j
+                    break
+            image_name = 'image_' + str(spic[i][1]) + '.'
+            start_dir = os.getcwd()
+            dir_files = derect_function.checking_for_image(user_id, start_dir)
+            for j in dir_files:
+                if image_name in j:
+                    image_name = j
+                    break
+            time = tranclate_time(spic[i][2])
+            video_maker_function.make_image_video(image_name, spic[i][1], user_id)
+            video_maker_function.time_image_video(time, 'image_video' + str(spic[i][1]) + '.avi', spic[i][1], user_id)
+            video_maker_function.connect_vid_image_vid(video_name, 'image_video' + str(spic[i][1]) + '.avi', spic[i][4],
+                                                       user_id)
+            os.chdir(start_dir)
+        elif spic[i][0] == '3':
+            video_name = 'video_' + str(spic[i][1]) + '.'
+            start_dir = os.getcwd()
+            dir_files = derect_function.checking_for_video(user_id, start_dir)
+            for i in dir_files:
+                if video_name in i:
+                    video_name = i
+                    break
+            video_maker_function.make_video_white_black(video_name, user_id)
+            os.chdir(start_dir)
+        elif spic[i][0] == '4':
+            video_name = 'video_' + str(spic[i][1]) + '.'
+            start_dir = os.getcwd()
+            dir_files = derect_function.checking_for_video(user_id, start_dir)
+            for i in dir_files:
+                if video_name in i:
+                    video_name = i
+                    break
+            video_maker_function.extract_audio_from_video(video_name, user_id)
+            os.chdir(start_dir)
+        elif spic[i][0] == '5':
+            for i in range(len(spic)):
+                video_name = 'video_' + str(spic[i][1]) + '.'
+                start_dir = os.getcwd()
+                dir_files = derect_function.checking_for_video(user_id, start_dir)
+                for j in dir_files:
+                    if video_name in j:
+                        video_name = j
+                        break
+                video_name = os.getcwd() + '/vid/user_' + str(user_id) + '/' + video_name
+                os.chdir(start_dir)
+
+                audio_name = 'audio_' + str(spic[i][2]) + '.'
+                dir_files = derect_function.checking_for_audio(user_id, start_dir)
+                for j in dir_files:
+                    if audio_name in j:
+                        audio_name = j
+                        break
+                audio_name = os.getcwd() + '/aud/user_' + str(user_id) + '/' + audio_name
+                os.chdir(start_dir)
+
+                start_aud = tranclate_time(spic[i][3])
+                end_aud = tranclate_time(spic[i][4])
+
+                start_vid = tranclate_time(spic[i][5])
+                end_vid = tranclate_time(spic[i][6])
+
+            video_maker_function.add_music_without_vid_audio(video_name, audio_name, start_aud, end_aud, start_vid,
+                                                             end_vid, user_id)
+            os.chdir(start_dir)
+        elif spic[i][0] == '6':
+            for i in range(len(spic)):
+                video_name = 'video_' + str(spic[i][1]) + '.'
+                start_dir = os.getcwd()
+                dir_files = derect_function.checking_for_video(user_id, start_dir)
+                for j in dir_files:
+                    if video_name in j:
+                        video_name = j
+                        break
+                video_name = os.getcwd() + '/vid/user_' + str(user_id) + '/' + video_name
+                os.chdir(start_dir)
+
+                audio_name = 'audio_' + str(spic[i][2]) + '.'
+                dir_files = derect_function.checking_for_audio(user_id, start_dir)
+                for j in dir_files:
+                    if audio_name in j:
+                        audio_name = j
+                        break
+                audio_name = os.getcwd() + '/aud/user_' + str(user_id) + '/' + audio_name
+                os.chdir(start_dir)
+
+                start_aud = tranclate_time(spic[i][3])
+                end_aud = tranclate_time(spic[i][4])
+
+                start_vid = tranclate_time(spic[i][5])
+                end_vid = tranclate_time(spic[i][6])
+
+            video_maker_function.add_music_with_vid_audio(video_name, audio_name, start_aud, end_aud, start_vid,
+                                                          end_vid, user_id)
+            os.chdir(start_dir)
+        elif spic[i][0] == '7':
+            koef = float(spic[i][2])
+            print(koef)
+            video_name = 'video_' + str(spic[i][1]) + '.'
+            start_dir = os.getcwd()
+            dir_files = derect_function.checking_for_video(user_id, start_dir)
+            for i in dir_files:
+                if video_name in i:
+                    video_name = i
+                    break
+            video_maker_function.editing_audio_in_video(video_name, koef, user_id)
+            os.chdir(start_dir)
+        elif spic[i][0] == '8':
+            koef = float(spic[i][2])
+            print(koef)
+            audio_name = 'audio_' + str(spic[i][1]) + '.'
+            start_dir = os.getcwd()
+            dir_files = derect_function.checking_for_audio(user_id, start_dir)
+            for i in dir_files:
+                if audio_name in i:
+                    audio_name = i
+                    break
+            print(audio_name)
+            video_maker_function.editing_audio_in_mus(audio_name, koef, user_id)
+            os.chdir(start_dir)
+        elif spic[i][0] == '9':
+            koef = float(spic[i][2])
+            print(koef)
+            start = tranclate_time(spic[i][3])
+            end = tranclate_time(spic[i][4])
+            video_name = 'video_' + str(spic[i][1]) + '.'
+            start_dir = os.getcwd()
+            dir_files = derect_function.checking_for_video(user_id, start_dir)
+            for i in dir_files:
+                if video_name in i:
+                    video_name = i
+                    break
+            video_maker_function.editing_part_audio_in_video(video_name, koef, start, end, user_id)
+            os.chdir(start_dir)
+        elif spic[i][0] == '10':
+            start = tranclate_time(spic[i][2])
+            end = tranclate_time(spic[i][3])
+            print(start)
+            print(end)
+            start_dir = os.getcwd()
+            video_name = 'audio_' + str(spic[i][1]) + '.'
+            dir_files = derect_function.checking_for_audio(user_id, start_dir)
+            for i in dir_files:
+                if video_name in i:
+                    video_name = i
+                    break
+            video_maker_function.cut_audio(video_name, start, end, user_id)
+            os.chdir(start_dir)
+            print(video_name)
+    connection(user_id, names, flag)
+
+def connection(user_id, names, flag):
+    start_dir = os.getcwd()
+    if flag == True:
+        os.chdir(start_dir)
+        video_maker_function.resize_vid(names, user_id)
+        video_maker_function.connect_video(names)
+        os.chdir(start_dir)
+    else:
+        pass
+
+#print(spic)
+#print('='*20)
+
+
 
 '''
-def test_function():
-    print('поток засыпает')
-    print("Запущено потоков: %i." % threading.active_count())
-    time.sleep(10)
-    print('поток проснулся и завершил работу')
-
-
-threading.Thread(target=test_function(), daemon=True).start()
-#sys.exit(test_function)
-print("Запущено потоков: %i." % threading.active_count())'''
+for i in range(len(spic)):
+    time = spic[i].split()
+    print(time)
+'''
