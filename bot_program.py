@@ -13,7 +13,10 @@ def start(message):
     markup1 = types.ReplyKeyboardMarkup(resize_keyboard=True)
     item1 = types.KeyboardButton("Видео")
     item2 = types.KeyboardButton("Аудио")
-    markup1.add(item1, item2)
+    item3 = types.KeyboardButton("Завершить")
+    markup1.add(item1, item2).add(item3)
+
+    start_dir = os.getcwd()
 
     bot.send_message(message.chat.id, "Привет. Это бот созданный для создания простых манипуляций с видео. \n"
                                       "Весь доступный функционал вы можете посмотреть на вкладках клавиатуры. \n"
@@ -31,25 +34,7 @@ def start(message):
     derect_function.creat_res_dir(message.from_user.id)
     derect_function.creat_com_dir(message.from_user.id)
     derect_function.creat_command_file(message.from_user.id)
-
-
-
-
-
-
-'''
-@bot.message_handler(commands=['menu'])
-def menu(message):
-
-    # keyboard
-    markup1 = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    item1 = types.KeyboardButton("Сохранить")
-    item2 = types.KeyboardButton("Вернуться к последнему действию")
-    markup1.add(item1).add(item2)
-
-    bot.send_message(message.chat.id,'МЕНЮ', reply_markup=markup1)
-'''
-
+    os.chdir(start_dir)
 
 
 @bot.message_handler(content_types=['text'])
@@ -80,7 +65,8 @@ def main_menu(message):
         markup1 = types.ReplyKeyboardMarkup(resize_keyboard=True)
         item1 = types.KeyboardButton("Видео")
         item2 = types.KeyboardButton("Аудио")
-        markup1.add(item1, item2)
+        item3 = types.KeyboardButton("Завершить")
+        markup1.add(item1, item2).add(item3)
 
         if message.text == 'Видео': #and prov.back() == "0":
             bot.send_message(message.chat.id, "тут инструкция по работе с данными инструментами", reply_markup=video_keyboard)
@@ -100,7 +86,8 @@ def video_menu(message):
         markup1 = types.ReplyKeyboardMarkup(resize_keyboard=True)
         item1 = types.KeyboardButton("Видео")
         item2 = types.KeyboardButton("Аудио")
-        markup1.add(item1, item2)
+        item3 = types.KeyboardButton("Завершить")
+        markup1.add(item1, item2).add(item3)
 
         markup2 = types.ReplyKeyboardMarkup(resize_keyboard=True)
         item3 = types.KeyboardButton("Добавить еще")
@@ -153,7 +140,8 @@ def audio_menu(message):
         markup1 = types.ReplyKeyboardMarkup(resize_keyboard=True)
         item1 = types.KeyboardButton("Видео")
         item2 = types.KeyboardButton("Аудио")
-        markup1.add(item1, item2)
+        item3 = types.KeyboardButton('Завершить')
+        markup1.add(item1, item2).add(item3)
 
         if message.text == 'Наложение аудио поверх исходной дорожки':  # and prov.back() == "0":
             derect_function.write_command_in_comad_file(message.chat.id, '5', False)
@@ -228,6 +216,7 @@ def number_cut_video(message):
             bot.send_message(message.chat.id, "Действие отменено")
             bot.register_next_step_handler(message, video_menu)
 
+
 @bot.message_handler(content_types=['text'])
 def start_video(message):
     numbers = '0123456789:,.'
@@ -254,6 +243,7 @@ def start_video(message):
             f.close()
             bot.send_message(message.chat.id, "Действие отменено")
             bot.register_next_step_handler(message, video_menu)
+
 
 @bot.message_handler(content_types=['text'])
 def end_video(message):
@@ -455,21 +445,69 @@ def after_before_video(message):
 #функция для извлечения аудио из видео(вроде работает)(требует доработки)
 @bot.message_handler(content_types=['text'])
 def number_extract_audio_from_video(message):
-    if message.chat.type == 'private':
-
-        derect_function.write_command_in_comad_file(message.chat.id, message.text, True)
-        bot.send_message(message.chat.id, "Видео для извлечения видео запомнено")
+    try:
+        if message.chat.type == 'private':
+            if derect_function.checking_for_video_availability(message.chat.id, start_dir = os.getcwd()) < int(message.text):
+                bot.send_message(message.chat.id, "Выввели данные, которых нет в системе")
+                bot.send_message(message.chat.id, "Начните данную операцию заново")
+                f = open('user_' + str(message.chat.id) + '.txt', "r")
+                lines = f.readlines()
+                f.close()
+                f = open('user_' + str(message.chat.id) + '.txt', 'w')
+                f.writelines([item for item in lines[:-1]])
+                f.close()
+                bot.send_message(message.chat.id, "Действие отменено")
+                bot.register_next_step_handler(message, video_menu)
+            else:
+                derect_function.write_command_in_comad_file(message.chat.id, message.text, True)
+                bot.send_message(message.chat.id, "Видео для извлечения аудио запомнено")
+                bot.register_next_step_handler(message, video_menu)
+    except:
+        bot.send_message(message.chat.id, "Выввели данные, которых нет в системе")
+        bot.send_message(message.chat.id, "Начните данную операцию заново")
+        f = open('user_' + str(message.chat.id) + '.txt', "r")
+        lines = f.readlines()
+        f.close()
+        f = open('user_' + str(message.chat.id) + '.txt', 'w')
+        f.writelines([item for item in lines[:-1]])
+        f.close()
+        bot.send_message(message.chat.id, "Действие отменено")
         bot.register_next_step_handler(message, video_menu)
+
 
 
 #функции для склейки видео
 @bot.message_handler(content_types=['text'])
 def connect_video(message):
-    if message.chat.type == 'private':
+    try:
+        if message.chat.type == 'private':
+            if derect_function.checking_for_video_availability(message.chat.id, start_dir = os.getcwd()) < int(message.text):
+                bot.send_message(message.chat.id, "Выввели данные, которых нет в системе")
+                bot.send_message(message.chat.id, "Начните данную операцию заново")
+                f = open('user_' + str(message.chat.id) + '.txt', "r")
+                lines = f.readlines()
+                f.close()
+                f = open('user_' + str(message.chat.id) + '.txt', 'w')
+                f.writelines([item for item in lines[:-1]])
+                f.close()
+                bot.send_message(message.chat.id, "Действие отменено")
+                bot.register_next_step_handler(message, video_menu)
+            else:
+                derect_function.write_command_in_comad_file(message.chat.id, message.text, False)
+                bot.send_message(message.chat.id, "Видео для склейки запомненно")
+                bot.register_next_step_handler(message, connect_video_do)
+    except:
+        bot.send_message(message.chat.id, "Выввели данные, которых нет в системе")
+        bot.send_message(message.chat.id, "Начните данную операцию заново")
+        f = open('user_' + str(message.chat.id) + '.txt', "r")
+        lines = f.readlines()
+        f.close()
+        f = open('user_' + str(message.chat.id) + '.txt', 'w')
+        f.writelines([item for item in lines[:-1]])
+        f.close()
+        bot.send_message(message.chat.id, "Действие отменено")
+        bot.register_next_step_handler(message, video_menu)
 
-        derect_function.write_command_in_comad_file(message.chat.id, message.text, False)
-        bot.send_message(message.chat.id, "Видео для извлечения видео запомнено")
-        bot.register_next_step_handler(message, connect_video_do)
 
 @bot.message_handler(content_types=['text'])
 def connect_video_do(message):
@@ -1190,7 +1228,7 @@ def end_cut_audio(message):
 #НЕ ТРОГАТЬ ЭТО ПОКА. ТУТ ВСЕ РАБОТАЕТ. НЕ ТРЕБУЕТ ИЗМЕНЕНИЙ!!!!!!!!!!!
 @bot.message_handler(content_types=['video'])
 def handle_docs_video(message):
-    try:
+    #try:
         chat_id = message.chat.id
 
         file_info = bot.get_file(message.video.file_id)
@@ -1198,17 +1236,18 @@ def handle_docs_video(message):
 
 
         start_dir = os.getcwd()
+        print(start_dir)
         src = os.getcwd() + '/vid/user_'+ str(message.chat.id) + '/' + message.video.file_name;
         with open(src, 'wb') as new_file:
             new_file.write(downloaded_file)
             #os.chdir('/home/danila/video/video_maker_on_python/vid/user_' + str(message.chat.id) + '/') не убирать на случай если что-то в функции опять сломается
             print(os.getcwd())
-            derect_function.rename_vidfile(message.chat.id, message.video.file_name, start_dir)
+        derect_function.rename_vidfile(message.chat.id, message.video.file_name, start_dir)
 
 
         bot.reply_to(message, "Видео сохранено")
-    except Exception as e:
-        bot.reply_to(message, e)
+    #except Exception as e:
+       # bot.reply_to(message, e)
 
 
 @bot.message_handler(content_types=['audio'])
@@ -1226,7 +1265,7 @@ def handle_docs_audio(message):
             new_file.write(downloaded_file)
             #os.chdir('/home/danila/video/video_maker_on_python/vid/user_' + str(message.chat.id) + '/') не убирать на случай если что-то в функции опять сломается
             print(os.getcwd())
-            derect_function.rename_audfile(message.chat.id, message.audio.file_name, start_dir)
+        derect_function.rename_audfile(message.chat.id, message.audio.file_name, start_dir)
 
 
         bot.reply_to(message, "Аудио сохранено")
@@ -1249,7 +1288,7 @@ def handle_docs_audio(message):
             new_file.write(downloaded_file)
             #os.chdir('/home/danila/video/video_maker_on_python/vid/user_' + str(message.chat.id) + '/') не убирать на случай если что-то в функции опять сломается
             print(os.getcwd())
-            derect_function.rename_imgfile(message.chat.id, message.document.file_name, start_dir)
+        derect_function.rename_imgfile(message.chat.id, message.document.file_name, start_dir)
 
 
         bot.reply_to(message, "Фото сохранено")

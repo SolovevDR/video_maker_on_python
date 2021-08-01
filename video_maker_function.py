@@ -137,11 +137,13 @@ def add_music_without_vid_audio(name_video, name_music, start_audiotime, end_aud
 
 
 
-    clip = mus.subclip(start_audiotime, end_videotime)
     vid_before_mus = vid.subclip(0, start_videotime)
-    vid_after_mus = vid.subclip(end_videotime, vid.duration)
+    vid_after_mus = vid.subclip(end_videotime , vid.duration)
     vid_with_mus = vid.subclip(start_videotime, end_videotime)
-    vid_with_mus = vid_with_mus.set_audio(clip)
+    vid_with_mus = vid_with_mus.volumex(0)
+    clip = mus.subclip(start_audiotime, end_audiotime)
+    new_audioclip = CompositeAudioClip([vid_with_mus.audio, clip])
+    vid_with_mus.audio = new_audioclip
     if start_videotime != 0:
         trim_vid = concatenate_videoclips([vid_before_mus, vid_with_mus, vid_after_mus])
     else:
@@ -208,9 +210,7 @@ def add_music_with_vid_audio(name_video, name_music, start_audiotime, end_audiot
         end_videotime = vid.duration
 
     vid_before_mus = vid.subclip(0, start_videotime)
-
     vid_after_mus = vid.subclip(end_videotime , vid.duration)
-
     vid_with_mus = vid.subclip(start_videotime, end_videotime)
     clip = mus.subclip(start_audiotime, end_audiotime)
     new_audioclip = CompositeAudioClip([vid_with_mus.audio, clip])
@@ -399,14 +399,14 @@ def resize_vid(vid_names, user_id):
         list_vid.append(black_vid)
 
     trim_vid = concatenate_videoclips(list_vid)
-    trim_vid.write_videofile('resize_black_video.avi', codec='libx264')
+    trim_vid.write_videofile('resize_black_video.mp4', codec='libx264')
     os.chdir(start_dir)
 
 #склеивает видео(работает правильно)
 def connect_video(vid_names, user_id):
     start_dir = os.getcwd()
     os.chdir(os.getcwd() + '/vid/user_' + str(user_id) + '/')
-    blacl_vid = VideoFileClip('resize_black_video.avi')
+    blacl_vid = VideoFileClip('resize_black_video.mp4')
     list_vid = [blacl_vid]
     len_vid =[0]
     sum_len = 0
@@ -696,12 +696,12 @@ def connect_video(vid_names, user_id):
              list_vid[20].set_position(('center', 'center')).set_start(len_vid[19]),
              list_vid[21].set_position(('center', 'center')).set_start(len_vid[20])])
     trim_vid.write_videofile('resalt_video.mp4', codec='libx264')
-    for i in vid_names:
-        i.close()
+    for i in range(len(list_vid)):
+        list_vid[i].close()
     blacl_vid.close()
     os.chdir(start_dir)
     os.chdir(os.getcwd() + '/vid/user_' + str(user_id) + '/')
-    os.remove('resize_black_video.avi')
+    os.remove('resize_black_video.mp4')
 
 
 

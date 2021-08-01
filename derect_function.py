@@ -29,34 +29,52 @@ def creat_res_dir(user_id):
 #переименовать видео файл в директоории
 def rename_vidfile(user_id, old_name, start_dir):
      os.chdir(os.getcwd() + '/vid/user_' + str(user_id) + '/')
+     flag = False
+     format = ''
      dir_files = os.listdir()
-     #print(dir_files)
+     for j in range(len(old_name)):
+          if old_name[j] == '.':
+               flag = True
+          if flag == True:
+               format = format + old_name[j]
      if 'video_res' in dir_files:
-          os.rename(old_name, 'video_' + str(len(dir_files)-1))
+          os.rename(old_name, 'video_' + str(len(dir_files)-1) + str(format))
      else:
-          os.rename(old_name, 'video_' + str(len(dir_files)))
+          os.rename(old_name, 'video_' + str(len(dir_files)) + str(format))
      os.chdir(start_dir)
 
 #переименовать аудио файл в директоории
 def rename_audfile(user_id, old_name, start_dir):
      os.chdir(os.getcwd() + '/aud/user_' + str(user_id) + '/')
+     flag = False
+     format = ''
      dir_files = os.listdir()
-     #print(dir_files)
+     for j in range(len(old_name)):
+          if old_name[j] == '.':
+               flag = True
+          if flag == True:
+               format = format + old_name[j]
      if 'audio_res' in dir_files:
-          os.rename(old_name, 'audio_' + str(len(dir_files)-1))
+          os.rename(old_name, 'audio_' + str(len(dir_files)-1) + str(format))
      else:
-          os.rename(old_name, 'audio_' + str(len(dir_files)))
+          os.rename(old_name, 'audio_' + str(len(dir_files))+ str(format))
      os.chdir(start_dir)
 
 #переименовать изображения в директоории
 def rename_imgfile(user_id, old_name, start_dir):
      os.chdir(os.getcwd() + '/img/user_' + str(user_id) + '/')
+     flag = False
+     format = ''
      dir_files = os.listdir()
-     #print(dir_files)
+     for j in range(len(old_name)):
+          if old_name[j] == '.':
+               flag = True
+          if flag == True:
+               format = format + old_name[j]
      if 'photo_res' in dir_files:
-          os.rename(old_name, 'photo_' + str(len(dir_files)-1))
+          os.rename(old_name, 'photo_' + str(len(dir_files)-1) + str(format))
      else:
-          os.rename(old_name, 'photo_' + str(len(dir_files)))
+          os.rename(old_name, 'photo_' + str(len(dir_files)) + str(format))
      os.chdir(start_dir)
 
 def creat_command_file(user_id):
