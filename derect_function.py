@@ -78,10 +78,15 @@ def rename_imgfile(user_id, old_name, start_dir):
      os.chdir(start_dir)
 
 def creat_command_file(user_id):
+     start_dir = os.getcwd()
+     os.chdir(os.getcwd() + '/com/user_' + str(user_id) + '/')
      f = open('user_' + str(user_id) + '.txt', 'w')
      f.close()
+     os.chdir(start_dir)
 
 def write_command_in_comad_file(user_id, command, flag):
+     start_dir = os.getcwd()
+     os.chdir(os.getcwd() + '/com/user_' + str(user_id) + '/')
      f = open('user_' + str(user_id) + '.txt', 'a')
      f.write(command)
      if flag == True:
@@ -89,6 +94,7 @@ def write_command_in_comad_file(user_id, command, flag):
      else:
           f.write(' ')
      f.close()
+     os.chdir(start_dir)
 
 def checking_for_video_availability(user_id, start_dir):
      os.chdir(os.getcwd() + '/vid/user_' + str(user_id) + '/')
@@ -126,6 +132,12 @@ def checking_for_image(user_id, start_dir):
      os.chdir(start_dir)
      return dir_files
 
+def checking_for_resalt(user_id, start_dir):
+     os.chdir(os.getcwd() + '/res/user_' + str(user_id) + '/')
+     dir_files = os.listdir()
+     os.chdir(start_dir)
+     return dir_files
+
 def take_name(file_name):
      name = ''
      for i in range(len(file_name)):
@@ -134,6 +146,42 @@ def take_name(file_name):
           else:
                break
      return name
+
+def delete_file_in_vid_dir(user_id):
+     start_dir = os.getcwd()
+     os.chdir(os.getcwd() + '/vid/user_' + str(user_id) + '/')
+     dir_files = os.listdir()
+     if len(dir_files) != 0:
+          for i in range(len(dir_files)):
+               os.remove(dir_files[i])
+     os.chdir(start_dir)
+
+def delete_file_in_aud_dir(user_id):
+     start_dir = os.getcwd()
+     os.chdir(os.getcwd() + '/aud/user_' + str(user_id) + '/')
+     dir_files = os.listdir()
+     if len(dir_files) != 0:
+          for i in range(len(dir_files)):
+               os.remove(dir_files[i])
+     os.chdir(start_dir)
+
+def delete_file_in_img_dir(user_id):
+     start_dir = os.getcwd()
+     os.chdir(os.getcwd() + '/img/user_' + str(user_id) + '/')
+     dir_files = os.listdir()
+     if len(dir_files) != 0:
+          for i in range(len(dir_files)):
+               os.remove(dir_files[i])
+     os.chdir(start_dir)
+
+def delete_file_in_res_dir(user_id):
+     start_dir = os.getcwd()
+     os.chdir(os.getcwd() + '/res/user_' + str(user_id) + '/')
+     dir_files = os.listdir()
+     if len(dir_files) != 0:
+          for i in range(len(dir_files)):
+               os.remove(dir_files[i])
+     os.chdir(start_dir)
 
 
 #os.remove('video_res_3.mp4')

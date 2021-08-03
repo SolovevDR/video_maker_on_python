@@ -1,6 +1,7 @@
 import os
 import video_maker_function
 import derect_function
+import database
 
 def tranclate_time(time):
     numbers = '0123456789'
@@ -24,7 +25,12 @@ def tranclate_time(time):
     return times
 
 def do_command_list(user_id):
+    database.update_status_of_usages(user_id, 1)
+    database.update_last_use(user_id)
+    start_dir = os.getcwd()
+    os.chdir(os.getcwd() + '/com/user_' + str(user_id) + '/')
     spic = extracting_commands_from_command_file(user_id)
+    os.chdir(start_dir)
     flag = None
     names = []
     numbers = '0123456789'
@@ -40,7 +46,9 @@ def do_command_list(user_id):
                 if video_name in i:
                     video_name = i
                     break
+            database.update_last_use(user_id)
             video_maker_function.cut_video(video_name, start, end, user_id)
+            database.update_last_use(user_id)
         elif spic[i][0] == '1':
             print('1', i)
             start_dir = os.getcwd()
@@ -74,11 +82,13 @@ def do_command_list(user_id):
                     image_name = j
                     break
             time = tranclate_time(spic[i][2])
+            database.update_last_use(user_id)
             video_maker_function.make_image_video(image_name, spic[i][1], user_id)
             video_maker_function.time_image_video(time, 'image_video' + str(spic[i][1]) + '.avi', spic[i][1], user_id)
             video_maker_function.connect_vid_image_vid(video_name, 'image_video' + str(spic[i][1]) + '.avi', spic[i][4],
                                                        user_id)
             os.chdir(start_dir)
+            database.update_last_use(user_id)
         elif spic[i][0] == '3':
             print('3', i)
             video_name = 'video_' + str(spic[i][1]) + '.'
@@ -88,7 +98,9 @@ def do_command_list(user_id):
                 if video_name in i:
                     video_name = i
                     break
+            database.update_last_use(user_id)
             video_maker_function.make_video_white_black(video_name, user_id)
+            database.update_last_use(user_id)
             os.chdir(start_dir)
         elif spic[i][0] == '4':
             print('4', i)
@@ -129,8 +141,10 @@ def do_command_list(user_id):
             start_vid = tranclate_time(spic[i][5])
             end_vid = tranclate_time(spic[i][6])
 
+            database.update_last_use(user_id)
             video_maker_function.add_music_without_vid_audio(video_name, audio_name, start_aud, end_aud, start_vid,
                                                              end_vid, user_id)
+            database.update_last_use(user_id)
             os.chdir(start_dir)
         elif spic[i][0] == '6':
             print('6', i)
@@ -160,8 +174,10 @@ def do_command_list(user_id):
             start_vid = tranclate_time(spic[i][5])
             end_vid = tranclate_time(spic[i][6])
 
+            database.update_last_use(user_id)
             video_maker_function.add_music_with_vid_audio(video_name, audio_name, start_aud, end_aud, start_vid,
                                                           end_vid, user_id)
+            database.update_last_use(user_id)
             os.chdir(start_dir)
         elif spic[i][0] == '7':
             print('7', i)
@@ -174,7 +190,9 @@ def do_command_list(user_id):
                 if video_name in i:
                     video_name = i
                     break
+            database.update_last_use(user_id)
             video_maker_function.editing_audio_in_video(video_name, koef, user_id)
+            database.update_last_use(user_id)
             os.chdir(start_dir)
         elif spic[i][0] == '8':
             print('8', i)
@@ -188,7 +206,9 @@ def do_command_list(user_id):
                     audio_name = i
                     break
             print(audio_name)
+            database.update_last_use(user_id)
             video_maker_function.editing_audio_in_mus(audio_name, koef, user_id)
+            database.update_last_use(user_id)
             os.chdir(start_dir)
         elif spic[i][0] == '9':
             print('9', i)
@@ -203,7 +223,9 @@ def do_command_list(user_id):
                 if video_name in i:
                     video_name = i
                     break
+            database.update_last_use(user_id)
             video_maker_function.editing_part_audio_in_video(video_name, koef, start, end, user_id)
+            database.update_last_use(user_id)
             os.chdir(start_dir)
         elif spic[i][0] == '10':
             print('10', i)
@@ -218,23 +240,29 @@ def do_command_list(user_id):
                 if video_name in i:
                     video_name = i
                     break
+            database.update_last_use(user_id)
             video_maker_function.cut_audio(video_name, start, end, user_id)
+            database.update_last_use(user_id)
             os.chdir(start_dir)
             print(video_name)
+    database.update_last_use(user_id)
     connection(user_id, names, flag)
 
 def connection(user_id, names, flag):
     start_dir = os.getcwd()
     if flag == True:
         os.chdir(start_dir)
+        database.update_last_use(user_id)
         video_maker_function.resize_vid(names, user_id)
+        database.update_last_use(user_id)
         video_maker_function.connect_video(names, user_id)
+        database.update_last_use(user_id)
         os.chdir(start_dir)
     else:
         pass
 
 def extracting_commands_from_command_file(user_id):
-    file1 = open("user_932229437.txt", "r")
+    file1 = open('user_' + str(user_id) + '.txt', "r")
     spic = []
     #засунуть в оболочку функции
     while True:
